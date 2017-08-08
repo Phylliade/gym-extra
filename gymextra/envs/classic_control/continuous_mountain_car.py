@@ -28,13 +28,13 @@ class ContinuousMountainCarEnv(gym.Env):
     }
 
     def __init__(self):
+        self.center = -0.523
         self.min_action = -1.0
         self.max_action = 1.0
-        self.min_position = -1.2
-        self.max_position = 0.6
-        self.center = -0.523
+        self.min_position = -1.2 - self.center
+        self.max_position = 0.6 - self.center
         self.max_speed = 0.07
-        self.goal_position = 0.45  # was 0.5 in gym, 0.45 in Arnaud de Broissia's version
+        self.goal_position = 0.45 - self.center  # was 0.5 in gym, 0.45 in Arnaud de Broissia's version
         self.power = 0.0015
 
         self.low_state = np.array([self.min_position, -self.max_speed])
@@ -45,6 +45,7 @@ class ContinuousMountainCarEnv(gym.Env):
         self.action_space = spaces.Box(
             self.min_action, self.max_action, shape=(1, ))
         self.observation_space = spaces.Box(self.low_state, self.high_state)
+        self.observation_space.names = ["position", "velocity"]
 
         self._seed()
         self.reset()
@@ -85,7 +86,7 @@ class ContinuousMountainCarEnv(gym.Env):
         return self.observation, reward, done, {}
 
     def _reset(self):
-        self.state = np.array([self.np_random.uniform(low=-0.6, high=-0.4), 0])
+        self.state = np.array([self.np_random.uniform(low=(-0.6 - self.center), high=(-0.4 - self.center)), 0])
         return np.array(self.observation)
         # Interesting bug:
         # return(np.array(self.state))
@@ -93,7 +94,7 @@ class ContinuousMountainCarEnv(gym.Env):
     @property
     def observation(self):
         position, velocity = self.state
-        return(np.array([position - self.center, velocity]))
+        return(np.array([position, velocity]))
 
     def _height(self, xs):
         return np.sin(3 * xs) * .45 + .55
