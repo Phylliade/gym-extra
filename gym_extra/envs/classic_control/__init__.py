@@ -1,1 +1,1 @@
-from gymextra.envs.classic_control.continuous_mountain_car import ContinuousMountainCarEnv
+from gym_extra.envs.classic_control.continuous_mountain_car import ContinuousMountainCarEnv
