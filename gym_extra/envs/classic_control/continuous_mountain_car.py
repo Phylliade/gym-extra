@@ -91,9 +91,13 @@ class ContinuousMountainCarEnv(gym.Env):
         # Interesting bug:
         # return(np.array(self.state))
 
-    def set_state(self, state):
-        self.state = state
-        
+    def set_state(self, state, from_observation=True):
+        if from_observation:
+            self.state[0] = state[0] + self.center
+        else:
+            self.state[0] = state[0]
+        self.state[1] = state[1]
+
     @property
     def observation(self):
         position, velocity = self.state
